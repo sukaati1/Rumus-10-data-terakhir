@@ -62,7 +62,7 @@
             border-radius: 12px;
             padding: 30px;
             width: 90%;
-            max-width: 600px; /* Ukuran diperkecil agar lebih pas karena tabel sudah hilang */
+            max-width: 600px;
             color: #fff;
             position: relative;
             z-index: 2;
@@ -94,7 +94,7 @@
 
         .raw-textarea {
             width: 100%;
-            height: 150px; /* Dipertinggi sedikit agar input data lebih leluasa dianalisis */
+            height: 150px;
             background: rgba(0, 0, 0, 0.8);
             border: 1px solid #ff6600;
             border-radius: 6px;
@@ -197,19 +197,20 @@
 </head>
 <body>
 
+<!-- Efek Latar Belakang Anime Naruto -->
 <div class="naruto-bg"></div>
 <div class="chakra-overlay"></div>
 
 <div class="container">
     <h2>Rumus Data Terakhir</h2>
     
-    <!-- Kolom Kosong untuk Paste Mentahan -->
+    <!-- Kotom Tempat Paste Data Mentah -->
     <div class="input-section">
         <label for="raw_data">Paste Data Mentah di Sini:</label>
-        <textarea id="raw_data" class="raw-textarea" placeholder="Paste data Excel atau Notepad Anda langsung di sini..."></textarea>
+        <textarea id="raw_data" class="raw-textarea" placeholder="Paste data mutasi bank Anda langsung di sini..."></textarea>
     </div>
     
-    <!-- Panel Tombol & Hasil (Tabel Sudah Dihapus) -->
+    <!-- Kontrol Fitur Hitung & Hasil Akhir -->
     <div class="action-panel">
         <div class="btn-group">
             <button class="btn-submit" onclick="prosesDanHitung()">Submit (Hitung)</button>
@@ -217,7 +218,7 @@
         </div>
 
         <div class="result-box">
-            <label id="label_hasil" for="hasil_akhir">HASIL AKHIR (Saldo Terbawah + Nilai Di Atasnya)</label>
+            <label id="label_hasil" for="hasil_akhir">HASIL AKHIR (Saldo Teratas + Nilai Teratas)</label>
             <input type="text" id="hasil_akhir" class="result-field" readonly placeholder="-">
         </div>
     </div>
@@ -238,7 +239,7 @@
         let validRows = [];
 
         lines.forEach(line => {
-            // Lewati baris kosong atau baris judul tabel
+            // Lewati baris kosong atau baris teks judul kolom
             if (line.trim() === '' || line.toLowerCase().includes('bank') || line.toLowerCase().includes('no. akun')) {
                 return;
             }
@@ -250,33 +251,30 @@
             }
         });
 
-        if (validRows.length < 2) {
-            alert('Data terlalu sedikit! Minimal butuh 2 baris data untuk menjalankan rumus.');
+        if (validRows.length < 1) {
+            alert('Format data tidak valid atau kosong!');
             return;
         }
 
-        // Ambil 2 baris paling bawah secara dinamis tanpa menampilkan tabel
-        let idxSaldoTerbawah = validRows.length - 1; 
-        let idxNilaiDiatasnya = validRows.length - 2; 
+        // AMBIL BARIS TERATAS (Data Paling Baru / Kronologis Terakhir)
+        let barisTeratas = validRows[0]; 
 
-        let noSaldo = validRows[idxSaldoTerbawah][0] ? validRows[idxSaldoTerbawah][0].trim() : idxSaldoTerbawah + 1;
-        let noNilai = validRows[idxNilaiDiatasnya][0] ? validRows[idxNilaiDiatasnya][0].trim() : idxNilaiDiatasnya + 1;
+        let noTeratas = barisTeratas[0] ? barisTeratas[0].trim() : '1';
+        let nilaiTeratasVal = parseFloat(barisTeratas[3].replace(/,/g, '')) || 0;
+        let saldoTeratasVal = parseFloat(barisTeratas[4].replace(/,/g, '')) || 0;
 
-        let nilaiDiatasnyaVal = parseFloat(validRows[idxNilaiDiatasnya][3].replace(/,/g, '')) || 0;
-        let saldoTerbawahVal = parseFloat(validRows[idxSaldoTerbawah][4].replace(/,/g, '')) || 0;
-
-        // Hitung Rumus
-        let total = saldoTerbawahVal + nilaiDiatasnyaVal;
+        // EKSEKUSI RUMUS MUTASI: Saldo Teratas + Nilai Teratas
+        let total = saldoTeratasVal + nilaiTeratasVal;
         
-        // Update Label Info dan Tampilkan Hasil Akhir
-        labelHasil.innerText = `HASIL AKHIR (Saldo No.${noSaldo} + Nilai No.${noNilai})`;
+        // Tampilkan hasil akhir ke layar
+        labelHasil.innerText = `HASIL AKHIR (Saldo No.${noTeratas} + Nilai No.${noTeratas})`;
         resultField.value = total.toLocaleString('en-US');
     }
 
     function resetSemua() {
         document.getElementById('raw_data').value = '';
         document.getElementById('hasil_akhir').value = '';
-        document.getElementById('label_hasil').innerText = 'HASIL AKHIR (Saldo Terbawah + Nilai Di Atasnya)';
+        document.getElementById('label_hasil').innerText = 'HASIL AKHIR (Saldo Teratas + Nilai Teratas)';
     }
 </script>
 
