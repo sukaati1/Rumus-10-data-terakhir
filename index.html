@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rumus 10data terakhir - Naruto Edition</title>
+    <title>Rumus Data Terakhir - Naruto Edition</title>
     <style>
         /* --- BACKGROUND GAMBAR NARUTO BERGERAK (100% FULLSCREEN) --- */
         body {
@@ -19,21 +19,18 @@
             background-color: #000;
         }
 
-        /* Lapisan Gambar Naruto Utama dengan Efek Bergerak Lambat (Ken Burns Effect) */
         .naruto-bg {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            /* Menggunakan gambar pertarungan ikonik Naruto vs Sasuke */
             background: url('https://lh3.googleusercontent.com/d/1Xl20Oq47N_AAtQZ76A28_fH_iZ6oU9-L=w1920-h1080-c') no-repeat center center;
             background-size: cover;
             z-index: -2;
             animation: narutoMotion 25s ease-in-out infinite alternate;
         }
 
-        /* Lapisan Efek Aura Chakra & Awan Hitam Berasap di Atas Gambar */
         .chakra-overlay {
             position: fixed;
             top: 0;
@@ -46,14 +43,12 @@
             animation: pulseAura 4s ease-in-out infinite alternate;
         }
 
-        /* Animasi Pergerakan Gambar Background */
         @keyframes narutoMotion {
             0% { transform: scale(1) translate(0, 0); }
             50% { transform: scale(1.08) translate(-1%, 1%); }
             100% { transform: scale(1.03) translate(1%, -1%); }
         }
 
-        /* Animasi Denyut Chakra Oranye */
         @keyframes pulseAura {
             0% { opacity: 0.6; }
             100% { opacity: 0.9; }
@@ -61,8 +56,8 @@
 
         /* --- CONTAINER UTAMA --- */
         .container {
-            background: rgba(15, 15, 15, 0.88); /* Transparan gelap agar background kelihatan */
-            border: 2px solid #ff6600; /* Warna Oranye Khas Naruto */
+            background: rgba(15, 15, 15, 0.88);
+            border: 2px solid #ff6600;
             box-shadow: 0 0 30px rgba(255, 102, 0, 0.6);
             border-radius: 12px;
             padding: 25px;
@@ -71,7 +66,7 @@
             color: #fff;
             position: relative;
             z-index: 2;
-            backdrop-filter: blur(6px); /* Efek kaca buram */
+            backdrop-filter: blur(6px);
         }
 
         h2 {
@@ -152,12 +147,13 @@
             font-style: italic;
         }
 
-        .highlight-orange {
+        /* Penanda baris aktif yang dihitung */
+        .highlight-nilai {
             background-color: rgba(255, 102, 0, 0.35) !important;
             font-weight: bold;
         }
 
-        .highlight-blue {
+        .highlight-saldo {
             background-color: rgba(0, 153, 255, 0.35) !important;
             font-weight: bold;
         }
@@ -217,7 +213,7 @@
         /* --- KOLOM HASIL AKHIR --- */
         .result-box {
             width: 100%;
-            max-width: 400px;
+            max-width: 450px;
             text-align: center;
         }
 
@@ -237,7 +233,7 @@
             text-align: center;
             background: #000;
             border: 2px solid #ff6600;
-            color: #00ff00; /* Hijau menyala ala sistem kasir/mesin */
+            color: #00ff00;
             border-radius: 6px;
             box-sizing: border-box;
             box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
@@ -246,20 +242,17 @@
 </head>
 <body>
 
-<!-- Lapisan Background Gambar Bergerak -->
 <div class="naruto-bg"></div>
 <div class="chakra-overlay"></div>
 
 <div class="container">
-    <h2>Rumus 10data terakhir</h2>
+    <h2>Rumus Data Terakhir</h2>
     
-    <!-- Kolom Kosong untuk Paste Mentahan -->
     <div class="input-section">
-        <label for="raw_data">Paste Data Mentah di Sini (Sertakan Baris Judul Kolom Jika Ada):</label>
-        <textarea id="raw_data" class="raw-textarea" placeholder="Contoh masukan:&#10;1  dana  087774836663  34,500  232,000 ...&#10;2  dana  085945010346  100,000  224,700 ..."></textarea>
+        <label for="raw_data">Paste Data Mentah di Sini (Berapa pun Jumlah Barisnya):</label>
+        <textarea id="raw_data" class="raw-textarea" placeholder="Paste data Excel/Notepad di sini..."></textarea>
     </div>
     
-    <!-- Kolom Tabel yang Awalnya Kosong -->
     <div class="table-container">
         <table>
             <thead>
@@ -284,7 +277,6 @@
         </table>
     </div>
 
-    <!-- Panel Tombol & Hasil -->
     <div class="action-panel">
         <div class="btn-group">
             <button class="btn-submit" onclick="prosesDanHitung()">Submit (Hitung)</button>
@@ -292,7 +284,7 @@
         </div>
 
         <div class="result-box">
-            <label for="hasil_akhir">HASIL AKHIR (Saldo No.4 + Nilai No.3)</label>
+            <label id="label_hasil" for="hasil_akhir">HASIL AKHIR (Saldo Terbawah + Nilai Di Atasnya)</label>
             <input type="text" id="hasil_akhir" class="result-field" readonly placeholder="-">
         </div>
     </div>
@@ -303,6 +295,7 @@
         let rawInput = document.getElementById('raw_data').value.trim();
         let tableBody = document.getElementById('table_body');
         let resultField = document.getElementById('hasil_akhir');
+        let labelHasil = document.getElementById('label_hasil');
 
         if (!rawInput) {
             alert('Silakan masukkan data mentah terlebih dahulu!');
@@ -310,7 +303,6 @@
         }
 
         let lines = rawInput.split('\n');
-        let htmlRows = '';
         let validRows = [];
 
         lines.forEach(line => {
@@ -318,22 +310,29 @@
                 return;
             }
 
-            // Memisahkan kolom dengan TAB atau spasi ganda
             let columns = line.split(/\t| {2,}/);
             if (columns.length >= 5) {
                 validRows.push(columns);
             }
         });
 
-        if (validRows.length === 0) {
-            alert('Format data tidak dikenali. Pastikan kolom terpisah dengan TAB atau spasi ganda.');
+        if (validRows.length < 2) {
+            alert('Data terlalu sedikit! Minimal butuh 2 baris data untuk menjalankan rumus.');
             return;
         }
 
-        let nilai3 = 0;
-        let saldo4 = 0;
+        // Tentukan indeks baris terbawah dan nomor di atasnya
+        let idxSaldoTerbawah = validRows.length - 1; // Baris paling bawah (Contoh: No 10 atau No 4)
+        let idxNilaiDiatasnya = validRows.length - 2; // Baris kedua dari bawah (Contoh: No 9 atau No 3)
 
-        validRows.forEach(row => {
+        let htmlRows = '';
+        let nilaiDiatasnyaVal = 0;
+        let saldoTerbawahVal = 0;
+
+        let noSaldo = validRows[idxSaldoTerbawah][0] ? validRows[idxSaldoTerbawah][0].trim() : idxSaldoTerbawah + 1;
+        let noNilai = validRows[idxNilaiDiatasnya][0] ? validRows[idxNilaiDiatasnya][0].trim() : idxNilaiDiatasnya + 1;
+
+        validRows.forEach((row, index) => {
             let no = row[0] ? row[0].trim() : '';
             let bank = row[1] ? row[1].trim() : '';
             let noAkun = row[2] ? row[2].trim() : '';
@@ -347,13 +346,13 @@
 
             let rowClass = '';
             
-            // Mencari baris No 3 dan No 4 untuk rumus
-            if (no === '3') {
-                rowClass = 'class="highlight-orange"';
-                nilai3 = parseFloat(nilai.replace(/,/g, '')) || 0;
-            } else if (no === '4') {
-                rowClass = 'class="highlight-blue"';
-                saldo4 = parseFloat(saldo.replace(/,/g, '')) || 0;
+            // Logika Otomatis Menandai Baris Sesuai Posisi Terakhirnya
+            if (index === idxNilaiDiatasnya) {
+                rowClass = 'class="highlight-nilai"'; // Warna Oranye
+                nilaiDiatasnyaVal = parseFloat(nilai.replace(/,/g, '')) || 0;
+            } else if (index === idxSaldoTerbawah) {
+                rowClass = 'class="highlight-saldo"'; // Warna Biru
+                saldoTerbawahVal = parseFloat(saldo.replace(/,/g, '')) || 0;
             }
 
             htmlRows += `<tr ${rowClass}>
@@ -372,19 +371,18 @@
 
         tableBody.innerHTML = htmlRows;
 
-        // Eksekusi rumus
-        let total = saldo4 + nilai3;
+        // Hitung Rumus Fleksibel
+        let total = saldoTerbawahVal + nilaiDiatasnyaVal;
         
-        if (nilai3 > 0 || saldo4 > 0) {
-            resultField.value = total.toLocaleString('en-US');
-        } else {
-            resultField.value = 'Data No.3 / No.4 Tidak Ditemukan';
-        }
+        // Update label agar user tahu nomor berapa saja yang sedang dihitung
+        labelHasil.innerText = `HASIL AKHIR (Saldo No.${noSaldo} + Nilai No.${noNilai})`;
+        resultField.value = total.toLocaleString('en-US');
     }
 
     function resetSemua() {
         document.getElementById('raw_data').value = '';
         document.getElementById('hasil_akhir').value = '';
+        document.getElementById('label_hasil').innerText = 'HASIL AKHIR (Saldo Terbawah + Nilai Di Atasnya)';
         document.getElementById('table_body').innerHTML = `
             <tr>
                 <td colspan="10" class="empty-row">Belum ada data. Silakan paste data mentah di atas lalu klik Submit.</td>
