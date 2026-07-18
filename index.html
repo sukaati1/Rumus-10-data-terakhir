@@ -60,9 +60,9 @@
             border: 2px solid #ff6600;
             box-shadow: 0 0 30px rgba(255, 102, 0, 0.6);
             border-radius: 12px;
-            padding: 25px;
+            padding: 30px;
             width: 90%;
-            max-width: 1100px;
+            max-width: 600px; /* Ukuran diperkecil agar lebih pas karena tabel sudah hilang */
             color: #fff;
             position: relative;
             z-index: 2;
@@ -75,17 +75,18 @@
             text-transform: uppercase;
             letter-spacing: 2px;
             margin-top: 0;
+            margin-bottom: 25px;
             text-shadow: 2px 2px 8px #000;
         }
 
         /* --- INPUT DATA MENTAH --- */
         .input-section {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         .input-section label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             color: #ff8533;
             font-weight: bold;
             text-shadow: 1px 1px 2px #000;
@@ -93,14 +94,14 @@
 
         .raw-textarea {
             width: 100%;
-            height: 90px;
+            height: 150px; /* Dipertinggi sedikit agar input data lebih leluasa dianalisis */
             background: rgba(0, 0, 0, 0.8);
             border: 1px solid #ff6600;
             border-radius: 6px;
             color: #fff;
-            padding: 10px;
+            padding: 12px;
             font-family: monospace;
-            font-size: 12px;
+            font-size: 13px;
             resize: vertical;
             box-sizing: border-box;
         }
@@ -111,61 +112,14 @@
             box-shadow: 0 0 10px rgba(255, 102, 0, 0.5);
         }
 
-        /* --- RESPONSIVE TABLE --- */
-        .table-container {
-            overflow-x: auto;
-            margin-bottom: 20px;
-            border-radius: 6px;
-            border: 1px solid #444;
-            min-height: 120px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-            text-align: left;
-            background: rgba(0, 0, 0, 0.75);
-        }
-
-        th, td {
-            padding: 12px 10px;
-            border-bottom: 1px solid #333;
-            white-space: nowrap;
-        }
-
-        th {
-            background-color: #ff6600;
-            color: black;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        .empty-row {
-            text-align: center;
-            color: #aaa;
-            font-style: italic;
-        }
-
-        /* Penanda baris aktif yang dihitung */
-        .highlight-nilai {
-            background-color: rgba(255, 102, 0, 0.35) !important;
-            font-weight: bold;
-        }
-
-        .highlight-saldo {
-            background-color: rgba(0, 153, 255, 0.35) !important;
-            font-weight: bold;
-        }
-
-        /* --- PANEL TOMBOL --- */
+        /* --- PANEL TOMBOL & HASIL --- */
         .action-panel {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 20px;
             align-items: center;
             background: rgba(0,0,0,0.6);
-            padding: 15px;
+            padding: 20px;
             border-radius: 8px;
             border: 1px dashed #ff6600;
         }
@@ -173,10 +127,12 @@
         .btn-group {
             display: flex;
             gap: 15px;
+            width: 100%;
         }
 
         button {
-            padding: 12px 25px;
+            flex: 1;
+            padding: 12px 0;
             font-size: 15px;
             font-weight: bold;
             cursor: pointer;
@@ -194,7 +150,7 @@
 
         .btn-submit:hover {
             background-color: #ff8533;
-            transform: scale(1.05);
+            transform: scale(1.02);
             box-shadow: 0 0 20px rgba(255, 102, 0, 0.8);
         }
 
@@ -207,13 +163,12 @@
         .btn-reset:hover {
             background-color: #cc0000;
             border-color: #cc0000;
-            transform: scale(1.05);
+            transform: scale(1.02);
         }
 
         /* --- KOLOM HASIL AKHIR --- */
         .result-box {
             width: 100%;
-            max-width: 450px;
             text-align: center;
         }
 
@@ -228,7 +183,7 @@
         .result-field {
             width: 100%;
             padding: 15px;
-            font-size: 24px;
+            font-size: 26px;
             font-weight: bold;
             text-align: center;
             background: #000;
@@ -248,35 +203,13 @@
 <div class="container">
     <h2>Rumus Data Terakhir</h2>
     
+    <!-- Kolom Kosong untuk Paste Mentahan -->
     <div class="input-section">
-        <label for="raw_data">Paste Data Mentah di Sini (Berapa pun Jumlah Barisnya):</label>
-        <textarea id="raw_data" class="raw-textarea" placeholder="Paste data Excel/Notepad di sini..."></textarea>
+        <label for="raw_data">Paste Data Mentah di Sini:</label>
+        <textarea id="raw_data" class="raw-textarea" placeholder="Paste data Excel atau Notepad Anda langsung di sini..."></textarea>
     </div>
     
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Bank</th>
-                    <th>No. Akun Bank</th>
-                    <th>Nilai</th>
-                    <th>Saldo</th>
-                    <th>Tanggal</th>
-                    <th>Tanggal Tarik Bank</th>
-                    <th>Informasi</th>
-                    <th>User</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody id="table_body">
-                <tr>
-                    <td colspan="10" class="empty-row">Belum ada data. Silakan paste data mentah di atas lalu klik Submit.</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
+    <!-- Panel Tombol & Hasil (Tabel Sudah Dihapus) -->
     <div class="action-panel">
         <div class="btn-group">
             <button class="btn-submit" onclick="prosesDanHitung()">Submit (Hitung)</button>
@@ -293,7 +226,6 @@
 <script>
     function prosesDanHitung() {
         let rawInput = document.getElementById('raw_data').value.trim();
-        let tableBody = document.getElementById('table_body');
         let resultField = document.getElementById('hasil_akhir');
         let labelHasil = document.getElementById('label_hasil');
 
@@ -306,10 +238,12 @@
         let validRows = [];
 
         lines.forEach(line => {
+            // Lewati baris kosong atau baris judul tabel
             if (line.trim() === '' || line.toLowerCase().includes('bank') || line.toLowerCase().includes('no. akun')) {
                 return;
             }
 
+            // Pisahkan kolom menggunakan tab (Excel) atau spasi ganda
             let columns = line.split(/\t| {2,}/);
             if (columns.length >= 5) {
                 validRows.push(columns);
@@ -321,60 +255,20 @@
             return;
         }
 
-        // Tentukan indeks baris terbawah dan nomor di atasnya
-        let idxSaldoTerbawah = validRows.length - 1; // Baris paling bawah (Contoh: No 10 atau No 4)
-        let idxNilaiDiatasnya = validRows.length - 2; // Baris kedua dari bawah (Contoh: No 9 atau No 3)
-
-        let htmlRows = '';
-        let nilaiDiatasnyaVal = 0;
-        let saldoTerbawahVal = 0;
+        // Ambil 2 baris paling bawah secara dinamis tanpa menampilkan tabel
+        let idxSaldoTerbawah = validRows.length - 1; 
+        let idxNilaiDiatasnya = validRows.length - 2; 
 
         let noSaldo = validRows[idxSaldoTerbawah][0] ? validRows[idxSaldoTerbawah][0].trim() : idxSaldoTerbawah + 1;
         let noNilai = validRows[idxNilaiDiatasnya][0] ? validRows[idxNilaiDiatasnya][0].trim() : idxNilaiDiatasnya + 1;
 
-        validRows.forEach((row, index) => {
-            let no = row[0] ? row[0].trim() : '';
-            let bank = row[1] ? row[1].trim() : '';
-            let noAkun = row[2] ? row[2].trim() : '';
-            let nilai = row[3] ? row[3].trim() : '0';
-            let saldo = row[4] ? row[4].trim() : '0';
-            let tgl = row[5] ? row[5].trim() : '';
-            let tglTarik = row[6] ? row[6].trim() : '';
-            let info = row[7] ? row[7].trim() : '';
-            let user = row[8] ? row[8].trim() : '';
-            let status = row[9] ? row[9].trim() : '';
+        let nilaiDiatasnyaVal = parseFloat(validRows[idxNilaiDiatasnya][3].replace(/,/g, '')) || 0;
+        let saldoTerbawahVal = parseFloat(validRows[idxSaldoTerbawah][4].replace(/,/g, '')) || 0;
 
-            let rowClass = '';
-            
-            // Logika Otomatis Menandai Baris Sesuai Posisi Terakhirnya
-            if (index === idxNilaiDiatasnya) {
-                rowClass = 'class="highlight-nilai"'; // Warna Oranye
-                nilaiDiatasnyaVal = parseFloat(nilai.replace(/,/g, '')) || 0;
-            } else if (index === idxSaldoTerbawah) {
-                rowClass = 'class="highlight-saldo"'; // Warna Biru
-                saldoTerbawahVal = parseFloat(saldo.replace(/,/g, '')) || 0;
-            }
-
-            htmlRows += `<tr ${rowClass}>
-                <td>${no}</td>
-                <td>${bank}</td>
-                <td>${noAkun}</td>
-                <td>${nilai}</td>
-                <td>${saldo}</td>
-                <td>${tgl}</td>
-                <td>${tglTarik}</td>
-                <td>${info}</td>
-                <td>${user}</td>
-                <td>${status}</td>
-            </tr>`;
-        });
-
-        tableBody.innerHTML = htmlRows;
-
-        // Hitung Rumus Fleksibel
+        // Hitung Rumus
         let total = saldoTerbawahVal + nilaiDiatasnyaVal;
         
-        // Update label agar user tahu nomor berapa saja yang sedang dihitung
+        // Update Label Info dan Tampilkan Hasil Akhir
         labelHasil.innerText = `HASIL AKHIR (Saldo No.${noSaldo} + Nilai No.${noNilai})`;
         resultField.value = total.toLocaleString('en-US');
     }
@@ -383,11 +277,6 @@
         document.getElementById('raw_data').value = '';
         document.getElementById('hasil_akhir').value = '';
         document.getElementById('label_hasil').innerText = 'HASIL AKHIR (Saldo Terbawah + Nilai Di Atasnya)';
-        document.getElementById('table_body').innerHTML = `
-            <tr>
-                <td colspan="10" class="empty-row">Belum ada data. Silakan paste data mentah di atas lalu klik Submit.</td>
-            </tr>
-        `;
     }
 </script>
 
